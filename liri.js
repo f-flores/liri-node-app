@@ -9,6 +9,8 @@
 //
 // ===========================================================================================
 
+const TweetDateLength = 16;
+
 var keys, spotify, client, params;
 var appMethod;
 var Twitter;
@@ -34,11 +36,17 @@ switch (appMethod) {
 
 
 // ---------------------------------------------------------------------------------------
-// myTweets() outputs my last twenty tweets to my terminal window.
+// myTweets() outputs my last twenty tweets to my terminal window. This function makes
+//  use of the twitter client.get() function, with the statuses/user_timeline endpoint
 //
 function myTweets() {
+  var tweetCount = 1;
+
   // params = {"screen_name": "nodejs"};
-  params = {"screen_name": "coding_ff"};
+  params = {
+            "screen_name": "coding_ff",
+            "count": 20
+          };
 
   client.get("statuses/user_timeline", params, (error, tweets, response) => {
     if (error) {
@@ -47,7 +55,12 @@ function myTweets() {
       return false;
     }
 
-    console.log(tweets);
+    // console.log(JSON.stringify(tweets, null, 2));
+    for (const msg of tweets) {
+      console.log(msg.created_at.slice(0,TweetDateLength));
+      console.log(tweetCount++ + ". " + msg.text);
+      console.log("=======================================================================");
+    }
 
     return true;
   });
