@@ -25,12 +25,13 @@ However, in order to successfully run this app, a few programs must be already i
 
 4. Since this file makes use of various node modules, please run
 
-* npm install
+* `npm install`
 
 This installs all of the dependencies.
 
 5. This app utilizes the `twitter` and `spotify` npm packages, so to sucessfully run this app, please include your twitter and spotify keys in an `.env` file.
 
+``` javascript
 SPOTIFY_ID=your_spotify_id
 SPOTIFY_SECRET=your_spotify_secret
 
@@ -38,6 +39,7 @@ TWITTER_CONSUMER_KEY=your_twitter_consumer_key
 TWITTER_CONSUMER_SECRET=your_twitter_consumer_secret
 TWITTER_ACCESS_TOKEN_KEY=your_twitter_access_token_key
 TWITTER_ACCESS_TOKEN_SECRET=your_twitter_access_token_secret
+```
 
 
 ### Comments
