@@ -91,12 +91,21 @@ function spotifyThis(obj) {
       if (err) {
         return console.log("Error occurred: " + err);
     }
-    // console.log(JSON.stringify(data.tracks.items, null, 2));
     for (const track of data.tracks.items) {
-      // console.log(msg.created_at.slice(0,TweetDateLength));
-      // console.log(JSON.stringify(track.album.artists.name, null, 2));
-      console.log(track.album.artists[0].name);
-      console.log("=======================================================================");
+      if (obj.artist === "" && track.name.toUpperCase() === obj.title.toUpperCase()) {
+        console.log("Artist: " + track.album.artists[0].name);
+        console.log("Song: " + track.name);
+        console.log("Spotify Preview Link: " + track.preview_url);
+        console.log("Album: " + track.album.name);
+        console.log("=======================================================================");
+      } else if (track.album.artists[0].name === obj.artist && track.name === obj.title) {
+        console.log("No song selected. Default song: ");
+        console.log("Artist: " + track.album.artists[0].name);
+        console.log("Song: " + track.name);
+        console.log("Spotify Preview Link: " + track.preview_url);
+        console.log("Album: " + track.album.name);
+        console.log("=======================================================================");
+      }
     }
 
     return true;
