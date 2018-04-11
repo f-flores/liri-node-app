@@ -16,6 +16,7 @@ var songObject = {
       "title": "The Sign",
       "artist": "Ace of Base"
     },
+    movieName = "",
     appMethod, appValue;
 var Twitter;
 
@@ -29,22 +30,29 @@ spotify = new Spotify(keys.spotify);
 client = new Twitter(keys.twitter);
 
 appMethod = process.argv["2"];
-if (process.argv["3"]) {
-  appValue = process.argv.slice(3).join(" ");
-  songObject.title = appValue;
-  songObject.artist = "";
-}
 
 switch (appMethod) {
   case "my-tweets":
     myTweets();
     break;
   case "spotify-this-song":
+    if (process.argv["3"]) {
+      appValue = process.argv.slice(3).join(" ");
+      songObject.title = appValue;
+      songObject.artist = "";
+    }
     spotifyThis(songObject);
+    break;
+  case "movie-this":
+    if (process.argv["3"]) {
+      appValue = process.argv.slice(3).join(" ");
+      movieName = appValue;
+    }
+    movieThis(movieName);
     break;
   default:
     console.log("Command not understood. Valid commands are the following:");
-    console.log("'my-tweets', 'spotify-this-song <song>'");
+    console.log("'my-tweets', 'spotify-this-song <song>', 'movie-this <movie-name>");
     break;
 }
 
@@ -110,4 +118,12 @@ function spotifyThis(obj) {
 
     return true;
   });
+}
+
+// -----------------------------------------------------------------------------------------
+// movieThis() takes in a movie name as a parameter and uses the omdb api to return
+// infomration about that movie
+//
+function movieThis(movie) {
+  console.log("movieThis");
 }
