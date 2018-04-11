@@ -12,25 +12,39 @@
 const TweetDateLength = 16;
 
 var keys, spotify, client, params;
-var appMethod;
+var songObject = {
+      "title": "The Sign",
+      "artist": "Ace of Base"
+    },
+    appMethod, appValue;
 var Twitter;
 
 require("dotenv").config();
 
 keys = require("./keys.js");
 Twitter = require("twitter");
+Spotify = require("node-spotify-api");
 
-// spotify = new Spotify(keys.spotify);
+spotify = new Spotify(keys.spotify);
 client = new Twitter(keys.twitter);
 
 appMethod = process.argv["2"];
+if (process.argv["3"]) {
+  appValue = process.argv.slice(3).join(" ");
+  songObject.title = appValue;
+  songObject.artist = "";
+}
 
 switch (appMethod) {
   case "my-tweets":
     myTweets();
     break;
+  case "spotify-this-song":
+    spotifyThis(songObject);
+    break;
   default:
-    console.log("Command not understood. Valid commands are 'my-tweets'");
+    console.log("Command not understood. Valid commands are the following:");
+    console.log("'my-tweets', 'spotify-this-song <song>'");
     break;
 }
 
@@ -42,7 +56,6 @@ switch (appMethod) {
 function myTweets() {
   var tweetCount = 1;
 
-  // params = {"screen_name": "nodejs"};
   params = {
             "screen_name": "coding_ff",
             "count": 20
@@ -55,7 +68,6 @@ function myTweets() {
       return false;
     }
 
-    // console.log(JSON.stringify(tweets, null, 2));
     for (const msg of tweets) {
       console.log(msg.created_at.slice(0,TweetDateLength));
       console.log(tweetCount++ + ". " + msg.text);
@@ -64,7 +76,29 @@ function myTweets() {
 
     return true;
   });
-// client.get("search/tweets", {"q": "from @coding_ff"}, (error, tweets, response) => {
-//  console.log(tweets);
-// });
+}
+
+// -----------------------------------------------------------------------------------------
+// spotifyThis() takes in song object as a parameter and uses the spotify nodejs package to
+//  return information about that song.
+//
+function spotifyThis(obj) {
+  // console.log("spotify-this-song " + song);
+  spotify.search({
+      "type": "track",
+      "query": obj.title
+    }, (err, data) => {
+      if (err) {
+        return console.log("Error occurred: " + err);
+    }
+    // console.log(JSON.stringify(data.tracks.items, null, 2));
+    for (const track of data.tracks.items) {
+      // console.log(msg.created_at.slice(0,TweetDateLength));
+      // console.log(JSON.stringify(track.album.artists.name, null, 2));
+      console.log(track.album.artists[0].name);
+      console.log("=======================================================================");
+    }
+
+    return true;
+  });
 }
