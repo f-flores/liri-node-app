@@ -216,11 +216,11 @@ function doWhatSays() {
     }
 
     console.log("in doWhatSays() appMethod, appValue: " + appMethod, appValue);
+    console.log(appValue);
+    processLiriCmd(appMethod, JSON.parse(appValue));
 
     return true;
   });
-  // processLiriCmd(appMethod, appValue);
-  // console.log("end of doWhat says-fn");
 }
 
 // ====================================================================================
