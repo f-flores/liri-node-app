@@ -20,6 +20,7 @@ const DefaultSongTitle = "The Sign";
 const DefaultSongArtist = "Ace of Base";
 const OMDBRottenTomatoesIndex = 1;
 const LiriCommandFileName = "random.txt";
+const LiriOutputFile = "liriOutput.txt";
 
 var keys, spotify, client, params, fs;
 var songObject = {
@@ -91,7 +92,9 @@ function processLiriCmd(action, value) {
 //  use of the twitter client.get() function, with the statuses/user_timeline endpoint
 //
 function myTweets() {
-  var tweetCount = 1;
+  var tweetCount = 1,
+      tweetOutput = [],
+      tweetFormattedOutput = [];
 
   params = {
             "screen_name": "coding_ff",
@@ -106,10 +109,21 @@ function myTweets() {
     }
 
     for (const msg of tweets) {
-      console.log(msg.created_at.slice(0,TweetDateLength));
-      console.log(tweetCount++ + ". " + msg.text);
-      console.log("=======================================================================");
+      tweetOutput.push(msg.created_at.slice(0, TweetDateLength));
+      tweetOutput.push(tweetCount++ + ". " + msg.text);
+      tweetOutput.push("=======================================================================");
     }
+    tweetFormattedOutput = tweetOutput.slice(",").join("\n");
+    console.log(tweetFormattedOutput);
+
+    // add tweets to liri output file
+    fs.appendFile(LiriOutputFile, tweetFormattedOutput, (err) => {
+      if (err) {
+        return console.log(err);
+      }
+
+      return true;
+    });
 
     return true;
   });
@@ -215,8 +229,6 @@ function doWhatSays() {
       appValue = "";
     }
 
-    console.log("in doWhatSays() appMethod, appValue: " + appMethod, appValue);
-    console.log(appValue);
     processLiriCmd(appMethod, JSON.parse(appValue));
 
     return true;
