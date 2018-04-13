@@ -19,6 +19,7 @@ const DefaultMovie = "Mr. Nobody";
 const DefaultSongTitle = "The Sign";
 const DefaultSongArtist = "Ace of Base";
 const OMDBRottenTomatoesIndex = 1;
+const LiriCommandFileName = "random.txt";
 
 var keys, spotify, client, params, fs;
 var songObject = {
@@ -26,7 +27,8 @@ var songObject = {
       "artist": DefaultSongArtist
     },
     movieName = "",
-    appMethod, appValue;
+    appMethod = "",
+    appValue = "";
 var Twitter, request;
 
 require("dotenv").config();
@@ -41,36 +43,46 @@ spotify = new Spotify(keys.spotify);
 client = new Twitter(keys.twitter);
 
 appMethod = process.argv["2"];
+if (process.argv["3"]) {
+  appValue = process.argv.slice(3).join(" ");
+} else {
+  appValue = "";
+}
 
-switch (appMethod) {
-  case "my-tweets":
-    myTweets();
-    break;
-  case "spotify-this-song":
-    if (process.argv["3"]) {
-      appValue = process.argv.slice(3).join(" ");
-      songObject.title = appValue;
-      songObject.artist = "";
-    }
-    spotifyThis(songObject);
-    break;
-  case "movie-this":
-    if (process.argv["3"]) {
-      appValue = process.argv.slice(3).join(" ");
-      movieName = appValue;
-    } else {
-      // default movie value
-      movieName = DefaultMovie;
-    }
-    movieThis(movieName);
-    break;
-  case "do-what-it-says":
-    doWhatSays();
-    break;
-  default:
-    console.log("Command not understood. Valid commands are the following:");
-    console.log("'my-tweets', 'spotify-this-song <song>', 'movie-this <movie-name>");
-    break;
+// ---------------------------------------------------------------------------------------
+// processLiriCmd()
+//
+function processLiriCmd(action, value) {
+  switch (action) {
+    case "my-tweets":
+      myTweets();
+      break;
+    case "spotify-this-song":
+      if (value !== "") {
+        songObject.title = value;
+        songObject.artist = "";
+      }
+      spotifyThis(songObject);
+      break;
+    case "movie-this":
+      if (value === "") {
+        // default movie value
+        movieName = DefaultMovie;
+      } else {
+        movieName = appValue;
+      }
+      movieThis(movieName);
+      break;
+    case "do-what-it-says":
+      doWhatSays();
+      console.log("In processLiriCmd(): appMethod appValue: " + appMethod, appValue);
+      // processLiriCmd(appMethod, appValue);
+      break;
+    default:
+      console.log("Command not understood. Valid commands are the following:");
+      console.log("'my-tweets', 'spotify-this-song <song>', 'movie-this <movie-name>");
+      break;
+  }
 }
 
 
@@ -181,5 +193,36 @@ function movieThis(movie) {
 // doWhatSays() reads in a file <random.txt> and executes the command in that file
 //
 function doWhatSays() {
+  var processesInFile = [];
+
   console.log("Do what it says");
+  // We will read the existing bank file
+  fs.readFile(LiriCommandFileName, "utf8", (err, data) => {
+    if (err) {
+      console.log("Error: " + err);
+
+      return false;
+    }
+
+    // separate file content into action and value
+    processesInFile = data.split(",");
+
+    appMethod = processesInFile["0"];
+
+    if (processesInFile["1"]) {
+      appValue = processesInFile["1"];
+    } else {
+      appValue = "";
+    }
+
+    console.log("in doWhatSays() appMethod, appValue: " + appMethod, appValue);
+
+    return true;
+  });
+  // processLiriCmd(appMethod, appValue);
+  // console.log("end of doWhat says-fn");
 }
+
+// ====================================================================================
+//  calls main function
+processLiriCmd(appMethod, appValue);
