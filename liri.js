@@ -233,7 +233,8 @@ function doWhatItSays() {
 }
 
 // -----------------------------------------------------------------------------------------------
-// addLiriOuputToFile() takes in a formatted array and appends its content to the LiriOutputFile
+// addLiriOuputToFile() takes in a formatted array and appends its content to the
+// LiriOutputFile
 //
 function processLiriOutputToFile(arr) {
   var formattedOutput = arr.slice(",").join("\n");
