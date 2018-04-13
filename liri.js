@@ -157,7 +157,7 @@ function spotifyThis(obj) {
     spotifyFormattedOutput = spotifyOutput.slice(",").join("\n");
     console.log(spotifyFormattedOutput);
 
-    // add tweets to liri output file
+    // add spotify info to liri output file
     addLiriOutputToFile(spotifyFormattedOutput);
 
     return true;
@@ -169,8 +169,10 @@ function spotifyThis(obj) {
 //  the request package to return infomration about that movie
 //
 function movieThis(movie) {
-  console.log("movieThis");
-  // Then run a request to the OMDB API with the movie specified
+  var movieOutput = [],
+      movieFormattedOutput;
+
+  // run a request to the OMDB API with the movie specified
   request("http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy", (error, response, body) => {
         if (error) {
           console.log("Error: " + JSON.stringify(error));
@@ -182,23 +184,28 @@ function movieThis(movie) {
         if (response.statusCode === 200) {
           // Parse the body of the site
           // console.log(JSON.parse(body, null, 2));
-          console.log("* Title: " + JSON.parse(body).Title);
-          console.log("* Year: " + JSON.parse(body).Year);
-          console.log("* IMDB Rating: " + JSON.parse(body).imdbRating);
+          movieOutput.push("* Title: " + JSON.parse(body).Title);
+          movieOutput.push("* Year: " + JSON.parse(body).Year);
+          movieOutput.push("* IMDB Rating: " + JSON.parse(body).imdbRating);
           // If Rotten Tomatoes Rating for movie exists then return info, otherwise display 'not available'.
           if (JSON.parse(body).Ratings[OMDBRottenTomatoesIndex]) {
-          console.log("* " + JSON.parse(body).Ratings[OMDBRottenTomatoesIndex].Source + " Rating: " +
+            movieOutput.push("* " + JSON.parse(body).Ratings[OMDBRottenTomatoesIndex].Source + " Rating: " +
                              JSON.parse(body).Ratings[OMDBRottenTomatoesIndex].Value);
           } else {
-            console.log("* Rotten Tomatoes Rating: Not Available");
+            movieOutput.push("* Rotten Tomatoes Rating: Not Available");
           }
-          console.log("* Country or Countries where movie produced: " + JSON.parse(body).Country);
-          console.log("* Language(s): " + JSON.parse(body).Language);
-          console.log("* Plot: " + JSON.parse(body).Plot);
-          console.log("* Actors: " + JSON.parse(body).Actors);
+          movieOutput.push("* Country or Countries where movie produced: " + JSON.parse(body).Country);
+          movieOutput.push("* Language(s): " + JSON.parse(body).Language);
+          movieOutput.push("* Plot: " + JSON.parse(body).Plot);
+          movieOutput.push("* Actors: " + JSON.parse(body).Actors);
         } else {
-          console.log("Movie Request Unsuccessful. Something went wrong.");
+          movieOutput.push("Movie Request Unsuccessful. Something went wrong.");
         }
+        movieFormattedOutput = movieOutput.slice(",").join("\n");
+        console.log(movieFormattedOutput);
+
+        // add movie output to liri output file
+        addLiriOutputToFile(movieFormattedOutput);
 
         return true;
       });
