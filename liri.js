@@ -117,13 +117,7 @@ function myTweets() {
     console.log(tweetFormattedOutput);
 
     // add tweets to liri output file
-    fs.appendFile(LiriOutputFile, tweetFormattedOutput, (err) => {
-      if (err) {
-        return console.log(err);
-      }
-
-      return true;
-    });
+    addLiriOutputToFile(tweetFormattedOutput);
 
     return true;
   });
@@ -134,7 +128,9 @@ function myTweets() {
 //  return information about that song.
 //
 function spotifyThis(obj) {
-  // console.log("spotify-this-song " + song);
+  var spotifyOutput = [],
+      spotifyFormattedOutput;
+
   spotify.search({
       "type": "track",
       "query": obj.title
@@ -144,20 +140,25 @@ function spotifyThis(obj) {
     }
     for (const track of data.tracks.items) {
       if (obj.artist === "" && track.name.toUpperCase() === obj.title.toUpperCase()) {
-        console.log("Artist: " + track.album.artists[0].name);
-        console.log("Song: " + track.name);
-        console.log("Spotify Preview Link: " + track.preview_url);
-        console.log("Album: " + track.album.name);
-        console.log("=======================================================================");
+        spotifyOutput.push("Artist: " + track.album.artists[0].name);
+        spotifyOutput.push("Song: " + track.name);
+        spotifyOutput.push("Spotify Preview Link: " + track.preview_url);
+        spotifyOutput.push("Album: " + track.album.name);
+        spotifyOutput.push("=======================================================================");
       } else if (track.album.artists[0].name === obj.artist && track.name === obj.title) {
-        console.log("No song selected. Default song: ");
-        console.log("Artist: " + track.album.artists[0].name);
-        console.log("Song: " + track.name);
-        console.log("Spotify Preview Link: " + track.preview_url);
-        console.log("Album: " + track.album.name);
-        console.log("=======================================================================");
+        spotifyOutput.push("No song selected. Default song: ");
+        spotifyOutput.push("Artist: " + track.album.artists[0].name);
+        spotifyOutput.push("Song: " + track.name);
+        spotifyOutput.push("Spotify Preview Link: " + track.preview_url);
+        spotifyOutput.push("Album: " + track.album.name);
+        spotifyOutput.push("=======================================================================");
       }
     }
+    spotifyFormattedOutput = spotifyOutput.slice(",").join("\n");
+    console.log(spotifyFormattedOutput);
+
+    // add tweets to liri output file
+    addLiriOutputToFile(spotifyFormattedOutput);
 
     return true;
   });
@@ -230,6 +231,19 @@ function doWhatSays() {
     }
 
     processLiriCmd(appMethod, JSON.parse(appValue));
+
+    return true;
+  });
+}
+
+// -----------------------------------------------------------------------------------------------
+// addLiriOuputToFile() takes in a formatted array and appends its content to the LiriOutputFile
+//
+function addLiriOutputToFile(arr) {
+  fs.appendFile(LiriOutputFile, "\n" + arr, (err) => {
+    if (err) {
+      return console.log(err);
+    }
 
     return true;
   });
