@@ -2,7 +2,7 @@
 
 liri-node-app
 
-The liri-node-app is a terminal based app that processes commands like my-tweets.
+The liri-node-app is a terminal based app that processes commands like my-tweets, spotify-this-song, movie-this, and do-what-it-says. This node app leverages node npm packages such as twitter, node-spotify-api, request and fs in order to simulate a language interpretation and recognition interface. In addition to logging the data to the terminal window, liri-node-app also outputs the data to a file called log.txt.
 
 ## Usage
 
@@ -15,11 +15,12 @@ The liri-node-app is a terminal based app that processes commands like my-tweets
     IMDB Rating, Rotten Tomatoes Rating, Countries where movie was produced, Plot, Actors,
     and languages
 
-  `node do-what-it-says`
+  `node do-what-it-says` reads text inside of random.txt and then processes it to call
+    one of LIRI's commands.
 
 ### Installation
 
-This app can be cloned with the following command from a terminal.
+This app can be cloned using git.
 
 However, in order to successfully run this app, a few programs must be already installed as prerequisites.
 

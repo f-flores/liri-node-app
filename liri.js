@@ -21,7 +21,7 @@ const DefaultSongTitle = "The Sign";
 const DefaultSongArtist = "Ace of Base";
 const OMDBRottenTomatoesIndex = 1;
 const LiriCommandFileName = "random.txt";
-const LiriOutputFile = "liriOutput.txt";
+const LiriOutputFile = "log.txt";
 
 var keys, spotify, client, params, fs;
 var songObject = {
