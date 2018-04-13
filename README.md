@@ -39,7 +39,7 @@ However, in order to successfully run this app, a few programs must be already i
 
 This installs all of the dependencies.
 
-5. This app utilizes the `twitter` and `spotify` npm packages, so to sucessfully run this app, please include your twitter and spotify keys in an `.env` file.
+5. This app utilizes the `twitter` and `spotify` npm packages, so to sucessfully run this app, please include your twitter and spotify keys in the `.env` file you create.
 
 ``` javascript
 SPOTIFY_ID=your_spotify_id
@@ -53,4 +53,5 @@ TWITTER_ACCESS_TOKEN_SECRET=your_twitter_access_token_secret
 
 ### Comments
 
-The Multi-RPS app was added to my github profile's portfolio:
+The liri-node-app app was added to my github portfolio:
+[liri-node-app](https://github.com/f-flores/liri-node-app)
