@@ -10,7 +10,8 @@
 //    movie-this <movieName> returns the following information about a movie: title, year,
 //      IMDB Rating, Rotten Tomatoes Rating, Countries where movie was produced, Plot, Actors,
 //      and languages
-//    do-what-it-says
+//    do-what-it-says reads text inside of random.txt and then processes it to call
+//      one of LIRI's commands.
 //
 // =============================================================================================
 
@@ -75,13 +76,11 @@ function processLiriCmd(action, value) {
       movieThis(movieName);
       break;
     case "do-what-it-says":
-      doWhatSays();
-      console.log("In processLiriCmd(): appMethod appValue: " + appMethod, appValue);
-      // processLiriCmd(appMethod, appValue);
+      doWhatItSays();
       break;
     default:
       console.log("Command not understood. Valid commands are the following:");
-      console.log("'my-tweets', 'spotify-this-song <song>', 'movie-this <movie-name>");
+      console.log("'my-tweets', 'spotify-this-song <song>', 'movie-this <movie-name>, do-what-it-says");
       break;
   }
 }
@@ -93,8 +92,7 @@ function processLiriCmd(action, value) {
 //
 function myTweets() {
   var tweetCount = 1,
-      tweetOutput = [],
-      tweetFormattedOutput = [];
+      tweetOutput = [];
 
   params = {
             "screen_name": "coding_ff",
@@ -113,11 +111,8 @@ function myTweets() {
       tweetOutput.push(tweetCount++ + ". " + msg.text);
       tweetOutput.push("=======================================================================");
     }
-    tweetFormattedOutput = tweetOutput.slice(",").join("\n");
-    console.log(tweetFormattedOutput);
-
-    // add tweets to liri output file
-    addLiriOutputToFile(tweetFormattedOutput);
+    // print to console and add tweeter output to liri output file
+    processLiriOutputToFile(tweetOutput);
 
     return true;
   });
@@ -128,8 +123,7 @@ function myTweets() {
 //  return information about that song.
 //
 function spotifyThis(obj) {
-  var spotifyOutput = [],
-      spotifyFormattedOutput;
+  var spotifyOutput = [];
 
   spotify.search({
       "type": "track",
@@ -154,11 +148,8 @@ function spotifyThis(obj) {
         spotifyOutput.push("=======================================================================");
       }
     }
-    spotifyFormattedOutput = spotifyOutput.slice(",").join("\n");
-    console.log(spotifyFormattedOutput);
-
-    // add spotify info to liri output file
-    addLiriOutputToFile(spotifyFormattedOutput);
+    // print to console and add movie output to liri output file
+    processLiriOutputToFile(spotifyOutput);
 
     return true;
   });
@@ -169,8 +160,7 @@ function spotifyThis(obj) {
 //  the request package to return infomration about that movie
 //
 function movieThis(movie) {
-  var movieOutput = [],
-      movieFormattedOutput;
+  var movieOutput = [];
 
   // run a request to the OMDB API with the movie specified
   request("http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy", (error, response, body) => {
@@ -201,20 +191,19 @@ function movieThis(movie) {
         } else {
           movieOutput.push("Movie Request Unsuccessful. Something went wrong.");
         }
-        movieFormattedOutput = movieOutput.slice(",").join("\n");
-        console.log(movieFormattedOutput);
+        movieOutput.push("=======================================================================");
 
-        // add movie output to liri output file
-        addLiriOutputToFile(movieFormattedOutput);
+        // print to console and add movie output to liri output file
+        processLiriOutputToFile(movieOutput);
 
         return true;
       });
 }
 
 // -----------------------------------------------------------------------------------------
-// doWhatSays() reads in a file <random.txt> and executes the command in that file
+// doWhatItSays() reads in a file <random.txt> and executes the command in that file
 //
-function doWhatSays() {
+function doWhatItSays() {
   var processesInFile = [];
 
   console.log("Do what it says");
@@ -246,8 +235,11 @@ function doWhatSays() {
 // -----------------------------------------------------------------------------------------------
 // addLiriOuputToFile() takes in a formatted array and appends its content to the LiriOutputFile
 //
-function addLiriOutputToFile(arr) {
-  fs.appendFile(LiriOutputFile, "\n" + arr, (err) => {
+function processLiriOutputToFile(arr) {
+  var formattedOutput = arr.slice(",").join("\n");
+
+  console.log(formattedOutput);
+  fs.appendFile(LiriOutputFile, "\n" + formattedOutput, (err) => {
     if (err) {
       return console.log(err);
     }

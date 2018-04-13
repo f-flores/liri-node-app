@@ -4,3 +4,4 @@ node_modules
 .env
 gulpfile.js
 .eslintrc.json
+sampleOutput.txt
